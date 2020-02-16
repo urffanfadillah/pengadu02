@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} {{ obj.title }} {% endblock %}
+
+{% block content %}
+{% include 'snippets/nav.html' %}
+
+<div class="container-fluid p-5">
+    <div class="container p-2">
+        <h1 class="text-center">{{ obj.judul }}</h1>
+        <div class="row text-center">
+            <div class="col-sm">di posting oleh: <b>{{ obj.user.nama }}</b></div>
+            <div class="col-sm">NIK: <b>{{ obj.user.nik }}</b></div>
+            <div class="col-sm">No.telp: <b>{{ obj.user.telp }}</b></div>
+            <div class="col-sm">
+                {% if obj.status_pengaduan == True %}
+                Status : <b>Pending</b>
+                {% elif obj.status_verifikasi == True %}
+                Status : <b>Proses</b>
+                {% elif obj.status_selesai == True %}
+                Status : <b>Selesai</b>
+                {% endif %}
+            </div>
+        </div>
+        <div class="container shadow p-4 mt-4">
+            <center><img src="{{ obj.foto.url }}" width="60%" height="30%"></center>
+            <p class="lead mt-3 p-2">
+                <u><b>{{ obj.tgl_pengaduan }}</b></u>, {{ obj.isi_laporan }}
+            </p>
+        </div>
+
+        <div class="container shadow p-4 mt-4">
+            <h3 class="text-center">Tanggapan</h3>
+            {% for tanggapan in tanggapans %}
+            <div class="container p-2">
+                <p class="lead">
+                    <b><u>{{ tanggapan.tgl_tanggapan }}</u></b>, {{ tanggapan.isi_tanggapan }}, <small>ditanggapi oleh: {{ tanggapan.user }}</small>
+                </p>
+            </div>
+            {% endfor %}
+
+            {% if obj.status_selesai == False %}
+            {% if user.level == 'admin' or user.level == 'petugas' %}
+            <form method="post">{% csrf_token %}
+                {{ form | crispy }}
+                <button type="submit" class="btn btn-outline-primary">Kirim tanggapan</button>
+            </form>
+            {% endif %}
+
+            <!-- Button trigger modal -->
+            {% if obj.status_verifikasi == True %}
+            <button type="button" class="btn btn-primary mt-5" data-toggle="modal" data-target="#exampleModal">
+                Selesai
+            </button>
+            {% endif %}
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>Konfirmasi untuk menyelesaikan proses laporan pengaduan?, jika selesai, tidak akan bisa ditanggapi lagi dan pengaduan ini akan masuk ke data pengaduan.</p>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a href="{% url 'core:proses-selesai' obj.id %}" class="btn btn-outline-success">Selesai</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

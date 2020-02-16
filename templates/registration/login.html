@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Pengadoe | login {% endblock title %}
+
+{% block content %}
+<center>
+    <div class="container-fluid p-5">
+        <h1>Masuk</h1>
+        <form method="post">{% csrf_token %}
+            <div style="width: 50%;">
+                {{ form.username | as_crispy_field }}
+                {{ form.password | as_crispy_field }}
+            </div>
+            <small>jadilah pengadu dengan daftar <a href="{% url 'signup' %}">disini</a></small><br>
+            <button type="submit" class="btn btn-success">Masuk</button>
+        </form>
+    </div>
+</center>
+{% endblock content %}

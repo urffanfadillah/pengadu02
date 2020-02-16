@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}Pengadoe | Beranda{% endblock %}
+
+{% block content %}
+{% include 'snippets/nav.html' %}
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <div class="display-4">Selamat datang di aplikasi Pengaduan masyarakat</div>
+        <p class="lead">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur, eaque!</p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- content 1 -->
+    <div class="container p-5 border-bottom">
+        {% if user.level == 'admin' or user.level == 'petugas' %}
+        <div class="row text-center">
+            <div class="col">
+                <h2>List aduan yang belum terverifikasi dan validasi</h2>
+            </div>
+            <div class="col"><ion-icon name="alert-circle-outline"></ion-icon></div>
+        </div>
+        {% for pengaduan in pengaduans %}
+            <ul>
+                <li><a href="core/laporan/{{pengaduan.slug}}">{{ pengaduan.judul }}</a></li>
+            </ul>
+            {% empty %}
+            <p class="lead text-center">
+                Laporan kosong
+            </p>
+        {% endfor %}
+        {% else %}
+        <div class="row text-center">
+            <div class="col">
+                <h2>List aduan saya</h2>
+            </div>
+            <div class="col"><ion-icon name="alert-circle-outline"></ion-icon></div>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Tanggal pengaduan</th>
+                    <th scope="col">Judul laporan pengaduan</th>
+                    <th scope="col">Status pengaduan</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pengaduan in pengaduan_saya %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ pengaduan.tgl_pengaduan }}</td>
+                    <td><a href="core/laporan/{{pengaduan.slug}}">{{ pengaduan.judul }}</a></td>
+                    <td>
+                        {% if pengaduan.status_pengaduan == True %}
+                        Pending
+                        {% elif pengaduan.status_verifikasi == True %}
+                        Proses
+                        {% elif pengaduan.status_selesai == True %}
+                        Selesai
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <p class="lead text-center">
+                    Laporan kosong
+                </p>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+
+    <!-- content 2 -->
+    {% if user.level == 'admin' or user.level == 'petugas' %}
+    <div class="container p-5 border-bottom">
+        <div class="row text-center">
+            <div class="col">
+                <h2>List aduan yang sedang diproses</h2>
+            </div>
+            <div class="col"><ion-icon name="refresh-circle-outline"></ion-icon></div>
+        </div>
+        {% for pengaduan_terverifikasi in pengaduan_terverifikasi %}
+            <ul>
+                <li><a href="core/laporan/{{pengaduan_terverifikasi.slug}}">{{ pengaduan_terverifikasi.judul }}</a></li>
+            </ul>
+            {% empty %}
+            <p class="lead text-center">
+                Laporan kosong
+            </p>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- content 3 -->
+    {% if user.level == 'admin' %}
+    <div class="container p-5">
+        <div class="row text-center">
+            <div class="col">
+                <h2>List aduan yang selesai diproses</h2>
+            </div>
+            <div class="col"><ion-icon name="checkmark-outline"></ion-icon></div>
+        </div>
+        <table class="table">
+            <thead>
+                <th scope="col">No</th>
+                <th scope="col">Judul aduan</th>
+                <th scope="col">Tanggal pengaduan</th>
+                <th scope="col">Dikirim oleh</th>
+            </thead>
+            <tbody>
+                {% for pengaduan_proses_selesai in pengaduan_proses_selesai %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td><a href="core/laporan/{{pengaduan_proses_selesai.slug}}">{{ pengaduan_proses_selesai.judul }}</a></td>
+                    <td>{{ pengaduan_proses_selesai.tgl_pengaduan }}</td>
+                    <td>{{ pengaduan_proses_selesai.user }}</td>
+                </tr>
+                {% empty %}
+                <p class="lead">
+                    Laporan kosong
+                </p>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

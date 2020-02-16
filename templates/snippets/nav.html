@@ -1,0 +1,19 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a href="{% url 'home' %}" class="navbar-brand">Pengadoe</a>
+    <div class="navbar-nav ml-auto">
+        {% if user.level == 'admin' %}
+        <a class="nav-item nav-link disable">Halo, {{user}}!</a>
+        <a href="{% url 'signup' %}" class="nav-item nav-link">Registrasi Akun</a>
+        <a href="{% url 'logout' %}" class="nav-item nav-link ml-5">Keluar</a>
+        {% elif user.level == 'petugas' %}
+        <a class="nav-item nav-link disable">Halo, {{user}}!</a>
+        <a href="{% url 'logout' %}" class="nav-item nav-link ml-5">Keluar</a>
+        {% elif user.level == 'masyarakat' %}
+        <a href="{% url 'core:ajukan-pengaduan' %}" class="nav-item nav-link">Buat laporan pengaduan</a>
+        <a class="nav-item nav-link disable">Halo, {{user}}!</a>
+        <a href="{% url 'logout' %}" class="nav-item nav-link ml-5">Keluar</a>
+        {% else %}
+        <a href="{% url 'login' %}" class="nav-item nav-link">Masuk</a>
+        {% endif %}
+    </div>
+</nav>

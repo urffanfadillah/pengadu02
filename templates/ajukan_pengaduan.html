@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Pengadoe | Ajukan aduan{% endblock %}
+
+{% block content %}
+{% include 'snippets/nav.html' %}
+
+<div class="container-fluid">
+    <div class="container p-5">
+        <h2 class="text-center">Ajukan aduan</h2>
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            {{ form | crispy }}
+            <button type="submit" class="btn btn-outline-success">Kirim</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

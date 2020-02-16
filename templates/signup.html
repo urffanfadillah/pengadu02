@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Pengadoe | Daftar{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-5">
+    <h2>Daftar jadi pengadoe</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.nama | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.nik | as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 mb-0">
+                {{ form.telp | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6 mb-0">
+                {{ form.username | as_crispy_field }}
+            </div>
+        </div>
+        {{ form.password1 | as_crispy_field }}
+        {{ form.password2 | as_crispy_field }}
+        <button type="submit" class="btn btn-success">Daftar</button>
+    </form>
+</div>
+{% endblock content %}
